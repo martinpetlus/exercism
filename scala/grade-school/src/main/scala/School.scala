@@ -4,17 +4,13 @@ import collection.mutable.SortedMap
 class School {
   type DB = Map[Int, Seq[String]]
 
-  private val database: DB = Map()
+  private val database: DB = Map().withDefaultValue(Seq())
 
-  def add(name: String, g: Int) = {
-    val names = database.getOrElse(g, Seq())
-    database(g) = names :+ name
-  }
+  def add(name: String, g: Int) = database += g -> (database(g) :+ name)
 
   def db: DB = database.clone
 
-  def grade(g: Int): Seq[String] =
-    database.getOrElse(g, Seq())
+  def grade(g: Int): Seq[String] = database(g)
 
   def sorted: DB =
     SortedMap {
