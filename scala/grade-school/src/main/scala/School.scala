@@ -1,21 +1,15 @@
-import collection.mutable.Map
-import collection.mutable.SortedMap
+import collection.immutable.SortedMap
 
 class School {
   type DB = Map[Int, Seq[String]]
 
-  private val database: DB = Map().withDefaultValue(Seq())
+  private var database: DB = SortedMap[Int, Seq[String]]().withDefaultValue(Seq())
 
   def add(name: String, g: Int) = database += g -> (database(g) :+ name)
 
-  def db: DB = database.clone
+  def db: DB = database
 
   def grade(g: Int): Seq[String] = database(g)
 
-  def sorted: DB =
-    SortedMap {
-      database.toSeq.map {
-        case (g, names) => (g, names.sorted)
-      }.sortBy(_._1):_*
-    }
+  def sorted: DB = database.mapValues(_.sorted)
 }
